@@ -1,0 +1,12 @@
+D:\project\CombileFileExcel\CombileFileExcel\bin\Debug\CombileFileExcel.exe.config
+D:\project\CombileFileExcel\CombileFileExcel\bin\Debug\CombileFileExcel.exe
+D:\project\CombileFileExcel\CombileFileExcel\bin\Debug\CombileFileExcel.pdb
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.AssemblyReference.cache
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.SuggestedBindingRedirects.cache
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.Form1.resources
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.Properties.Resources.resources
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.GenerateResource.cache
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.CoreCompileInputs.cache
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.exe
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.pdb
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.ResolveComReference.cache
