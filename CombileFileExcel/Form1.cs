@@ -48,16 +48,15 @@ namespace CombileFileExcel
 
             if (dr == System.Windows.Forms.DialogResult.OK)
             {
+                int index = 1;
+
                 // Read the files
                 foreach (String file in openFileDialog.FileNames)
                 {
+
                     try
                     {
-                        List<CustomerModel> temp = readFileExcelAction.ReadCustomerSheet(file);
-                        if(temp.Count > 0)
-                        {
-                            listCustomer.AddRange(temp);
-                        }
+                        index += readFileExcelAction.CopyCustomerSheet(file, path, index) - 1;
                     }
                     catch (SecurityException ex)
                     {
@@ -74,11 +73,6 @@ namespace CombileFileExcel
                             + ". You may not have permission to read the file, or " +
                             "it may be corrupt.\n\nReported error: " + ex.Message);
                     }
-                }
-
-                if(listCustomer.Count > 0)
-                {
-                    readFileExcelAction.WriteSheetCustomer(listCustomer, path);
                 }
             }
         }

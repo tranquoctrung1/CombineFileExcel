@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace CombileFileExcel.Actions
@@ -14,8 +15,8 @@ namespace CombileFileExcel.Actions
         public bool ValidateRowCustomer(int rowIndex, Microsoft.Office.Interop.Excel.Range xlRange)
         {
             bool check = true;
-            
-            for(int i = 1; i<= 4; i++)
+
+            for (int i = 1; i <= 4; i++)
             {
                 if (xlRange.Cells[rowIndex, i] == null || xlRange.Cells[rowIndex, i].Value2 == null)
                 {

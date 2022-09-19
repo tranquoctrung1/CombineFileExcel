@@ -16,110 +16,68 @@ namespace CombileFileExcel.Actions
 {
     public class ReadFileExcelAction
     {
-        public List<CustomerModel> ReadCustomerSheet(string path)
+        public int CopyCustomerSheet(string path, string pathToFileSave, int index)
         {
-            List<CustomerModel> list = new List<CustomerModel>();
-            ValidateRowAction validateRowAction = new ValidateRowAction();
-
+            int result = 0;
             try
             {
                 Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
                 Microsoft.Office.Interop.Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(path);
                 Microsoft.Office.Interop.Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
 
-                Microsoft.Office.Interop.Excel.Range xlRange = xlWorksheet.UsedRange;
+                Microsoft.Office.Interop.Excel.Workbook xlWorkbook2 = xlApp.Workbooks.Open(pathToFileSave, 0, false);
+                Microsoft.Office.Interop.Excel._Worksheet xlWorksheet2 = xlWorkbook2.Sheets[1];
 
-                int rows = xlWorksheet.Rows.Count;
+                xlWorksheet.Rows.ClearFormats();
+                xlWorksheet.Columns.ClearFormats();
 
-                for (int i = 2; i <= rows; i++)
+                result = xlWorksheet.UsedRange.Rows.Count;
+
+                int indexGetContent = 2;
+                int indexFillConent = index + 1;
+
+                if(index ==  1)
                 {
-                    if (validateRowAction.ValidateRowCustomer(i, xlRange) == true)
-                    {
-                        CustomerModel el = new CustomerModel();
-
-                        el.CustomerId = xlRange.Cells[i, 1].Value2 == null ? "" : xlRange.Cells[i, 1].Value2.ToString();
-                        el.CustomerName = xlRange.Cells[i, 2].Value2 == null ? "" : xlRange.Cells[i, 2].Value2.ToString();
-                        el.StafffId = xlRange.Cells[i, 3].Value2 == null ? "" : xlRange.Cells[i, 3].Value2.ToString();
-                        el.StaffName = xlRange.Cells[i, 4].Value2 == null ? "" : xlRange.Cells[i, 4].Value2.ToString();
-
-                        list.Add(el);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    indexGetContent = 1;
+                    indexFillConent = 1;
                 }
+
+                Microsoft.Office.Interop.Excel.Range from = xlWorksheet.Range[$"A{indexGetContent}:D{result}"];
+                Microsoft.Office.Interop.Excel.Range to = xlWorksheet2.Range[$"A{indexFillConent}:D{result + index}"];
+
+                from.Copy(to);
+
+                xlWorkbook2.Save();
+
+                xlWorkbook.Close(false);
+
+                xlWorkbook2.Close(true);
+                xlApp.Quit();
+
+                Marshal.ReleaseComObject(xlWorksheet);
+                Marshal.ReleaseComObject(xlWorkbook);
+
+                Marshal.ReleaseComObject(xlWorksheet2);
+                Marshal.ReleaseComObject(xlWorkbook2);
+
+                Marshal.ReleaseComObject(xlApp);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            return list;
-        }
-
-        public void WriteSheetCustomer(List<CustomerModel> list, string path)
-        {
-            if(path == "")
+            finally
             {
-                MessageBox.Show("Chưa tạo file!!");
-            }
-            else
-            {
-                Application ExcelApp = new Application();
-
-                Workbook ExcelWorkBook = null;
-
-                Worksheet ExcelWorkSheet = null;
-
-
-                try
+                foreach (Process process in Process.GetProcessesByName("Excel"))
                 {
-                    ExcelWorkBook = ExcelApp.Workbooks.Open(path);
-                    ExcelWorkSheet = ExcelWorkBook.Worksheets[1];
-
-
-                    ExcelWorkSheet.Cells[1, 1].Value2 = "MÃ KHÁCH HÀNG";
-                    ExcelWorkSheet.Cells[1, 2].Value2 = "TÊN KHÁCH HÀNG";
-                    ExcelWorkSheet.Cells[1, 3].Value2 = "MÃ NHÂN VIÊN";
-                    ExcelWorkSheet.Cells[1, 4].Value2 = "TÊN NHÂN VIÊN";
-
-                    int indexRow = 2;
-
-                    foreach (CustomerModel customer in list)
-                    {
-                        ExcelWorkSheet.Cells[indexRow, 1] = customer.CustomerId;
-                        ExcelWorkSheet.Cells[indexRow, 2] = customer.CustomerName;
-                        ExcelWorkSheet.Cells[indexRow, 3] = customer.StafffId;
-                        ExcelWorkSheet.Cells[indexRow, 4] = customer.StaffName;
-
-                        indexRow += 1;
-                    }
-                    ExcelWorkBook.Save();
-
-                    MessageBox.Show("Write Sheet 1 Done");
-
-                    ExcelWorkBook.Close();
-
-                    ExcelApp.Quit();
-
-                    Marshal.ReleaseComObject(ExcelWorkSheet);
-
-                    Marshal.ReleaseComObject(ExcelWorkBook);
-
-                    Marshal.ReleaseComObject(ExcelApp);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                finally
-                {
-
+                    process.Kill();
                 }
             }
-        }
 
+            return result;
+        }
+        
         public void CreateFileExcel(string path)
         {
             Application ExcelApp = new Application();
@@ -185,6 +143,11 @@ namespace CombileFileExcel.Actions
 
             finally
             {
+                foreach (Process process in Process.GetProcessesByName("Excel"))
+                {
+                    process.Kill();
+                }
+
             }
         }
     }
