@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,8 +34,7 @@ namespace CombileFileExcel
         }
 
         private void btnChoiceMutipleFile_Click(object sender, EventArgs e)
-        {
-            List<CustomerModel> listCustomer = new List<CustomerModel>();
+        { 
 
             ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
 
@@ -44,19 +44,34 @@ namespace CombileFileExcel
             openFileDialog.Multiselect = true;
             openFileDialog.Title = "Chọn nhiều file excel";
 
+            bool isFirstLoad = true;
+
             DialogResult dr = openFileDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.OK)
             {
-                int index = 1;
+                int indexForCustomerSheet = 1;
+                int indexForGoodsSheet = 1;
+                int indexForImportGoods = 1;
+                int indexForExportGoods = 1;
+
+                bool isError = false;
 
                 // Read the files
                 foreach (String file in openFileDialog.FileNames)
                 {
-
                     try
                     {
-                        index += readFileExcelAction.CopyCustomerSheet(file, path, index) - 1;
+                        if (isFirstLoad == true)
+                        {
+                            indexForCustomerSheet += readFileExcelAction.CopyCustomerSheet(file, path, indexForCustomerSheet) - 1;
+                            indexForGoodsSheet += readFileExcelAction.CopyGoodsSheet(file, path, indexForGoodsSheet) - 1;
+
+                            isFirstLoad = false;
+                        }
+
+                        indexForImportGoods += readFileExcelAction.CopyImportGoods(file, path, indexForImportGoods) - 2;
+                        indexForExportGoods += readFileExcelAction.CopyExportGoods(file, path, indexForExportGoods) - 2;
                     }
                     catch (SecurityException ex)
                     {
@@ -65,6 +80,8 @@ namespace CombileFileExcel
                             "Error message: " + ex.Message + "\n\n" +
                             "Details (send to Support):\n\n" + ex.StackTrace
                         );
+
+                        isError = true;
                     }
                     catch (Exception ex)
                     {
@@ -72,7 +89,14 @@ namespace CombileFileExcel
                         MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
                             + ". You may not have permission to read the file, or " +
                             "it may be corrupt.\n\nReported error: " + ex.Message);
+
+                        isError = true;
                     }
+                }
+
+                if(isError == false)
+                {
+                    MessageBox.Show("Gộp file thành công!!!");
                 }
             }
         }
@@ -87,10 +111,58 @@ namespace CombileFileExcel
                 {
                     List<string> files = Directory.GetFiles(fbd.SelectedPath).Where(s => s.EndsWith(".xls") || s.EndsWith(".xlsx")).ToList();
 
-                    foreach(string file in files)
+                    ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+
+                    bool isFirstLoad = true;
+
+                    int indexForCustomerSheet = 1;
+                    int indexForGoodsSheet = 1;
+                    int indexForImportGoods = 1;
+                    int indexForExportGoods = 1;
+
+                    bool isError = false;
+
+                    foreach (String file in files)
                     {
-                        MessageBox.Show(file);
+                        try
+                        {
+                            if (isFirstLoad == true)
+                            {
+                                indexForCustomerSheet += readFileExcelAction.CopyCustomerSheet(file, path, indexForCustomerSheet) - 1;
+                                indexForGoodsSheet += readFileExcelAction.CopyGoodsSheet(file, path, indexForGoodsSheet) - 1;
+
+                                isFirstLoad = false;
+                            }
+
+                            indexForImportGoods += readFileExcelAction.CopyImportGoods(file, path, indexForImportGoods) - 2;
+                            indexForExportGoods += readFileExcelAction.CopyExportGoods(file, path, indexForExportGoods) - 2;
+                        }
+                        catch (SecurityException ex)
+                        {
+                            // The user lacks appropriate permissions to read files, discover paths, etc.
+                            MessageBox.Show("Security error. Please contact your administrator for details.\n\n" +
+                                "Error message: " + ex.Message + "\n\n" +
+                                "Details (send to Support):\n\n" + ex.StackTrace
+                            );
+
+                            isError = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Could not load the image - probably related to Windows file system permissions.
+                            MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                                + ". You may not have permission to read the file, or " +
+                                "it may be corrupt.\n\nReported error: " + ex.Message);
+
+                            isError = true;
+                        }
                     }
+
+                    if(isError == true)
+                    {
+                        MessageBox.Show("Gộp file thành công!!!");
+                    }
+                    
                 }
             }
         }

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.btnChoiceMutipleFile = new System.Windows.Forms.Button();
-            this.btnChooseFolder = new System.Windows.Forms.Button();
             this.btnChooseSaveFile = new System.Windows.Forms.Button();
             this.txtFileName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCreateFileExcel = new System.Windows.Forms.Button();
+            this.btnChooseFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnChoiceMutipleFile
@@ -45,16 +45,6 @@
             this.btnChoiceMutipleFile.Text = "Chọn file";
             this.btnChoiceMutipleFile.UseVisualStyleBackColor = true;
             this.btnChoiceMutipleFile.Click += new System.EventHandler(this.btnChoiceMutipleFile_Click);
-            // 
-            // btnChooseFolder
-            // 
-            this.btnChooseFolder.Location = new System.Drawing.Point(208, 189);
-            this.btnChooseFolder.Name = "btnChooseFolder";
-            this.btnChooseFolder.Size = new System.Drawing.Size(143, 23);
-            this.btnChooseFolder.TabIndex = 1;
-            this.btnChooseFolder.Text = "Chọn thư mục";
-            this.btnChooseFolder.UseVisualStyleBackColor = true;
-            this.btnChooseFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
             // 
             // btnChooseSaveFile
             // 
@@ -92,6 +82,16 @@
             this.btnCreateFileExcel.UseVisualStyleBackColor = true;
             this.btnCreateFileExcel.Click += new System.EventHandler(this.btnCreateFileExcel_Click);
             // 
+            // btnChooseFolder
+            // 
+            this.btnChooseFolder.Location = new System.Drawing.Point(182, 177);
+            this.btnChooseFolder.Name = "btnChooseFolder";
+            this.btnChooseFolder.Size = new System.Drawing.Size(143, 23);
+            this.btnChooseFolder.TabIndex = 1;
+            this.btnChooseFolder.Text = "Chọn thư mục";
+            this.btnChooseFolder.UseVisualStyleBackColor = true;
+            this.btnChooseFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -114,11 +114,11 @@
         #endregion
 
         private System.Windows.Forms.Button btnChoiceMutipleFile;
-        private System.Windows.Forms.Button btnChooseFolder;
         private System.Windows.Forms.Button btnChooseSaveFile;
         private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCreateFileExcel;
+        private System.Windows.Forms.Button btnChooseFolder;
     }
 }
 
