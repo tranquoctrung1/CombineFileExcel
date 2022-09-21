@@ -35,86 +35,22 @@ namespace CombileFileExcel
 
         private void btnChoiceMutipleFile_Click(object sender, EventArgs e)
         { 
-
-            ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel (*.xls; *.xlsx) | *.xls; *.xlsx|" + "All files (*.*)|*.*";
-
-            openFileDialog.Multiselect = true;
-            openFileDialog.Title = "Chọn nhiều file excel";
-
-            bool isFirstLoad = true;
-
-            DialogResult dr = openFileDialog.ShowDialog();
-
-            if (dr == System.Windows.Forms.DialogResult.OK)
+            if(path != "")
             {
-                int indexForCustomerSheet = 1;
-                int indexForGoodsSheet = 1;
-                int indexForImportGoods = 1;
-                int indexForExportGoods = 1;
+                ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
 
-                bool isError = false;
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Excel (*.xls; *.xlsx) | *.xls; *.xlsx|" + "All files (*.*)|*.*";
 
-                // Read the files
-                foreach (String file in openFileDialog.FileNames)
+                openFileDialog.Multiselect = true;
+                openFileDialog.Title = "Chọn nhiều file excel";
+
+                bool isFirstLoad = true;
+
+                DialogResult dr = openFileDialog.ShowDialog();
+
+                if (dr == System.Windows.Forms.DialogResult.OK)
                 {
-                    try
-                    {
-                        if (isFirstLoad == true)
-                        {
-                            indexForCustomerSheet += readFileExcelAction.CopyCustomerSheet(file, path, indexForCustomerSheet) - 1;
-                            indexForGoodsSheet += readFileExcelAction.CopyGoodsSheet(file, path, indexForGoodsSheet) - 1;
-
-                            isFirstLoad = false;
-                        }
-
-                        indexForImportGoods += readFileExcelAction.CopyImportGoods(file, path, indexForImportGoods) - 2;
-                        indexForExportGoods += readFileExcelAction.CopyExportGoods(file, path, indexForExportGoods) - 2;
-                    }
-                    catch (SecurityException ex)
-                    {
-                        // The user lacks appropriate permissions to read files, discover paths, etc.
-                        MessageBox.Show("Security error. Please contact your administrator for details.\n\n" +
-                            "Error message: " + ex.Message + "\n\n" +
-                            "Details (send to Support):\n\n" + ex.StackTrace
-                        );
-
-                        isError = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Could not load the image - probably related to Windows file system permissions.
-                        MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
-                            + ". You may not have permission to read the file, or " +
-                            "it may be corrupt.\n\nReported error: " + ex.Message);
-
-                        isError = true;
-                    }
-                }
-
-                if(isError == false)
-                {
-                    MessageBox.Show("Gộp file thành công!!!");
-                }
-            }
-        }
-
-        private void btnChooseFolder_Click(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    List<string> files = Directory.GetFiles(fbd.SelectedPath).Where(s => s.EndsWith(".xls") || s.EndsWith(".xlsx")).ToList();
-
-                    ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
-
-                    bool isFirstLoad = true;
-
                     int indexForCustomerSheet = 1;
                     int indexForGoodsSheet = 1;
                     int indexForImportGoods = 1;
@@ -122,7 +58,8 @@ namespace CombileFileExcel
 
                     bool isError = false;
 
-                    foreach (String file in files)
+                    // Read the files
+                    foreach (String file in openFileDialog.FileNames)
                     {
                         try
                         {
@@ -158,12 +95,89 @@ namespace CombileFileExcel
                         }
                     }
 
-                    if(isError == true)
+                    if (isError == false)
                     {
                         MessageBox.Show("Gộp file thành công!!!");
                     }
-                    
                 }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có lưu file đề gộp!!!");
+            }
+            
+        }
+
+        private void btnChooseFolder_Click(object sender, EventArgs e)
+        {
+            if(path != "")
+            {
+                using (var fbd = new FolderBrowserDialog())
+                {
+                    DialogResult result = fbd.ShowDialog();
+
+                    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    {
+                        List<string> files = Directory.GetFiles(fbd.SelectedPath).Where(s => s.EndsWith(".xls") || s.EndsWith(".xlsx")).ToList();
+
+                        ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+
+                        bool isFirstLoad = true;
+
+                        int indexForCustomerSheet = 1;
+                        int indexForGoodsSheet = 1;
+                        int indexForImportGoods = 1;
+                        int indexForExportGoods = 1;
+
+                        bool isError = false;
+
+                        foreach (String file in files)
+                        {
+                            try
+                            {
+                                if (isFirstLoad == true)
+                                {
+                                    indexForCustomerSheet += readFileExcelAction.CopyCustomerSheet(file, path, indexForCustomerSheet) - 1;
+                                    indexForGoodsSheet += readFileExcelAction.CopyGoodsSheet(file, path, indexForGoodsSheet) - 1;
+
+                                    isFirstLoad = false;
+                                }
+
+                                indexForImportGoods += readFileExcelAction.CopyImportGoods(file, path, indexForImportGoods) - 2;
+                                indexForExportGoods += readFileExcelAction.CopyExportGoods(file, path, indexForExportGoods) - 2;
+                            }
+                            catch (SecurityException ex)
+                            {
+                                // The user lacks appropriate permissions to read files, discover paths, etc.
+                                MessageBox.Show("Security error. Please contact your administrator for details.\n\n" +
+                                    "Error message: " + ex.Message + "\n\n" +
+                                    "Details (send to Support):\n\n" + ex.StackTrace
+                                );
+
+                                isError = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Could not load the image - probably related to Windows file system permissions.
+                                MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                                    + ". You may not have permission to read the file, or " +
+                                    "it may be corrupt.\n\nReported error: " + ex.Message);
+
+                                isError = true;
+                            }
+                        }
+
+                        if (isError == true)
+                        {
+                            MessageBox.Show("Gộp file thành công!!!");
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có lưu file đề gộp!!!");
             }
         }
 
