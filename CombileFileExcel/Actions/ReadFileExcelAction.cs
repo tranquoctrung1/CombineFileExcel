@@ -2,6 +2,8 @@
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
 using System.Diagnostics;
 using System.IO; 
 using System.Linq;
@@ -374,6 +376,151 @@ namespace CombileFileExcel.Actions
                     process.Kill();
                 }
 
+            }
+        }
+
+        public List<ImportGoodsModel> LoadFileExcel(string path)
+        {
+
+            List<ImportGoodsModel> list = new List<ImportGoodsModel>();
+
+            try
+            {
+                string connStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=Excel 12.0;";
+                System.Data.OleDb.OleDbConnection MyConnection;
+                System.Data.DataSet DtSet;
+                System.Data.OleDb.OleDbDataAdapter MyCommand;
+                MyConnection = new System.Data.OleDb.OleDbConnection(connStr);
+                MyCommand = new System.Data.OleDb.OleDbDataAdapter("select * from [NHẬP KHẨU$]", MyConnection);
+                MyCommand.TableMappings.Add("Table", "Net-informations.com");
+                DtSet = new System.Data.DataSet();
+                MyCommand.Fill(DtSet);
+                MyConnection.Close();
+
+                if (DtSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach(DataRow row in DtSet.Tables[0].Rows)
+                    {
+                        if (row[0] != null)
+                        {
+                            if (row[0].ToString() != "")
+                            {
+                                if (row[0].ToString().ToLower() != "kho3" && row[0].ToString().ToLower()  != "kho4" && row[0].ToString().ToLower() != "vinhkhanh" && row[0].ToString().ToLower() != "kho ncq")
+                                {
+                                    ImportGoodsModel el = new ImportGoodsModel();
+
+                                    el.CustomerID = row[0].ToString();
+                                    el.CustomerName = row[1].ToString();
+
+                                    el.TimeStamp = row[2].ToString();
+                                    el.GoodsName = row[4].ToString();
+                                    
+                                    el.Amout = row[13].ToString();
+                                    el.Price = row[14].ToString();
+                                    el.TotalPrice = row[15].ToString();
+
+                                    list.Add(el);
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            return list;
+        }
+
+
+        public int GetUsedRowExcelInExportGoodsSheet(string path)
+        {
+            int length = 0;
+
+            try
+            {
+                string connStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=Excel 12.0;";
+                System.Data.OleDb.OleDbConnection MyConnection;
+                System.Data.DataSet DtSet;
+                System.Data.OleDb.OleDbDataAdapter MyCommand;
+                MyConnection = new System.Data.OleDb.OleDbConnection(connStr);
+                MyCommand = new System.Data.OleDb.OleDbDataAdapter("select * from [XUẤT KHẨU$]", MyConnection);
+                MyCommand.TableMappings.Add("Table", "Net-informations.com");
+                DtSet = new System.Data.DataSet();
+                MyCommand.Fill(DtSet);
+                MyConnection.Close();
+
+                if (DtSet.Tables[0].Rows.Count > 0)
+                {
+                    length = DtSet.Tables[0].Rows.Count;
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
+
+            }
+
+            return length;
+        }
+
+        public void WriteToExportGoods(List<ImportGoodsModel> list, string path)
+        {
+            try
+            {
+                Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
+                Microsoft.Office.Interop.Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(path);
+                Microsoft.Office.Interop.Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[5];
+
+                int usedRow = GetUsedRowExcelInExportGoodsSheet(path);
+                if(usedRow != 0)
+                {
+                    usedRow += 2;
+                }
+
+                if(list.Count > 0)
+                {
+                    foreach(ImportGoodsModel item in list)
+                    {
+                        xlWorksheet.Cells[usedRow, 1] = item.CustomerID ?? "";
+                        xlWorksheet.Cells[usedRow, 2] = item.CustomerName ?? "";
+                        xlWorksheet.Cells[usedRow, 3] = item.TimeStamp ?? "";
+                        xlWorksheet.Cells[usedRow, 5] = item.GoodsName ?? "";
+                        xlWorksheet.Cells[usedRow, 7] = item.Amout ?? "";
+                        xlWorksheet.Cells[usedRow, 8] = item.Price ?? "";
+                        xlWorksheet.Cells[usedRow, 9] = item.TotalPrice ?? "";
+
+                        usedRow++;
+                    }
+                }
+
+                xlWorkbook.Close(true);
+
+                xlApp.Quit();
+
+                Marshal.ReleaseComObject(xlWorksheet);
+                Marshal.ReleaseComObject(xlWorkbook);
+
+                Marshal.ReleaseComObject(xlApp);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                foreach (Process process in Process.GetProcessesByName("Excel"))
+                {
+                    process.Kill();
+                }
             }
         }
     }

@@ -229,5 +229,32 @@ namespace CombileFileExcel
             }
 
         }
+
+        private void btnReChooseFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel (*.xls; *.xlsx) | *.xls; *.xlsx|" + "All files (*.*)|*.*";
+            openFileDialog.Title = "Chọn file excel";
+
+            DialogResult dr = openFileDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                if(openFileDialog.FileName != "")
+                {
+                    path = openFileDialog.FileName;
+                }
+            }
+        }
+
+        private void btnCopyFilter_Click(object sender, EventArgs e)
+        {
+            ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+
+            List<ImportGoodsModel> list = readFileExcelAction.LoadFileExcel(path);
+
+            readFileExcelAction.WriteToExportGoods(list, path);
+
+        }
     }
 }

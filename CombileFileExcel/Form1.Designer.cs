@@ -34,6 +34,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnCreateFileExcel = new System.Windows.Forms.Button();
             this.btnChooseFolder = new System.Windows.Forms.Button();
+            this.btnReChooseFile = new System.Windows.Forms.Button();
+            this.btnCopyFilter = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnChoiceMutipleFile
@@ -74,7 +76,7 @@
             // 
             // btnCreateFileExcel
             // 
-            this.btnCreateFileExcel.Location = new System.Drawing.Point(263, 106);
+            this.btnCreateFileExcel.Location = new System.Drawing.Point(202, 105);
             this.btnCreateFileExcel.Name = "btnCreateFileExcel";
             this.btnCreateFileExcel.Size = new System.Drawing.Size(139, 23);
             this.btnCreateFileExcel.TabIndex = 5;
@@ -92,11 +94,33 @@
             this.btnChooseFolder.UseVisualStyleBackColor = true;
             this.btnChooseFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
             // 
+            // btnReChooseFile
+            // 
+            this.btnReChooseFile.Location = new System.Drawing.Point(386, 105);
+            this.btnReChooseFile.Name = "btnReChooseFile";
+            this.btnReChooseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnReChooseFile.TabIndex = 6;
+            this.btnReChooseFile.Text = "Chọn lại file";
+            this.btnReChooseFile.UseVisualStyleBackColor = true;
+            this.btnReChooseFile.Click += new System.EventHandler(this.btnReChooseFile_Click);
+            // 
+            // btnCopyFilter
+            // 
+            this.btnCopyFilter.Location = new System.Drawing.Point(73, 232);
+            this.btnCopyFilter.Name = "btnCopyFilter";
+            this.btnCopyFilter.Size = new System.Drawing.Size(75, 23);
+            this.btnCopyFilter.TabIndex = 7;
+            this.btnCopyFilter.Text = "Copy Filter";
+            this.btnCopyFilter.UseVisualStyleBackColor = true;
+            this.btnCopyFilter.Click += new System.EventHandler(this.btnCopyFilter_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 288);
+            this.Controls.Add(this.btnCopyFilter);
+            this.Controls.Add(this.btnReChooseFile);
             this.Controls.Add(this.btnCreateFileExcel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFileName);
@@ -119,6 +143,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCreateFileExcel;
         private System.Windows.Forms.Button btnChooseFolder;
+        private System.Windows.Forms.Button btnReChooseFile;
+        private System.Windows.Forms.Button btnCopyFilter;
     }
 }
 
