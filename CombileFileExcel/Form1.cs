@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -221,10 +222,15 @@ namespace CombileFileExcel
                     ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
 
                     readFileExcelAction.CreateFileExcel(path);
+
+                    txtPathFileCreate.Text = path;
+                    txtPathFileExecute.Text = path;
                 }
                 else
                 {
                     MessageBox.Show("File đã tồn tại!!!. Hãy tạo mới 1 file ");
+
+                    txtPathFileCreate.Text = "";
                 }
             }
 
@@ -243,18 +249,79 @@ namespace CombileFileExcel
                 if(openFileDialog.FileName != "")
                 {
                     path = openFileDialog.FileName;
+
+                    txtPathFileExecute.Text = path;
                 }
             }
         }
 
         private void btnCopyFilter_Click(object sender, EventArgs e)
         {
-            ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+            if(path != "")
+            {
+                ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
 
-            List<ImportGoodsModel> list = readFileExcelAction.LoadFileExcel(path);
+                List<ImportGoodsModel> list = readFileExcelAction.LoadFileExcelSheetImportGoods(path);
 
-            readFileExcelAction.WriteToExportGoods(list, path);
+                readFileExcelAction.WriteToExportGoods(list, path);
 
+                MessageBox.Show("Chuyển dữ liệu từ trang nhập sang trang xuất xong");
+
+            }
+            else
+            {
+                MessageBox.Show("File chưa có!!!");
+            }
+        }
+
+        private void btnFilterImportGoods_Click(object sender, EventArgs e)
+        {
+            if(path != "")
+            {
+                ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+                    
+                DataTable dt = readFileExcelAction.LoadFileExcelSheetImportGoodToDataTabe(path);
+
+                readFileExcelAction.WriteToExportGoodsByDataTable(path, dt);
+
+                MessageBox.Show("Lọc trang nhập xong");
+            }
+            else
+            {
+                MessageBox.Show("File chưa có!!!");
+            }
+            
+        }
+
+        private void btnSumSheetImportGoods_Click(object sender, EventArgs e)
+        {
+            if(path != "")
+            {
+                ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+                readFileExcelAction.SumSheetImportGoods(path);
+
+                MessageBox.Show("Tính tổng trang nhập hàng xong");
+            }
+            else
+            {
+                MessageBox.Show("File chưa có!!!");
+            }
+
+        }
+
+        private void btnSumSheetExportGoods_Click(object sender, EventArgs e)
+        {
+            if (path != "")
+            {
+                ReadFileExcelAction readFileExcelAction = new ReadFileExcelAction();
+                readFileExcelAction.SumSheetExportGoods(path);
+
+                MessageBox.Show("Tính tổng trang xuất hàng xong");
+            }
+            else
+            {
+                MessageBox.Show("File chưa có!!!");
+            }
         }
     }
 }
