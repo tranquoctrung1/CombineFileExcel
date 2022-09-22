@@ -10,3 +10,4 @@ D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.C
 D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.exe
 D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.pdb
 D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.csproj.ResolveComReference.cache
+D:\project\CombileFileExcel\CombileFileExcel\obj\Debug\CombileFileExcel.WaitForm.resources
